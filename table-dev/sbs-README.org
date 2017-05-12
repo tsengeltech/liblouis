@@ -1,3 +1,4 @@
+- install python3
 - build
   #+BEGIN_SRC sh
     ./configure --enable-ucs4

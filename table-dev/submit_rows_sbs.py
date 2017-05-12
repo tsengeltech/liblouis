@@ -3,27 +3,19 @@ import csv
 import fileinput
 from utils import *
 
-class UTF8Recoder:
-    def __init__(self, reader):
-        self.reader = reader
-    def __iter__(self):
-        return self
-    def next(self):
-        return self.reader.next().encode("utf-8")
-        
 class Reader:
     def __init__(self, files, encoding):
-        self.reader = csv.reader(UTF8Recoder(fileinput.FileInput(files, openhook=fileinput.hook_encoded(encoding))),
+        self.reader = csv.reader(fileinput.FileInput(files, openhook=fileinput.hook_encoded(encoding)),
                                  delimiter='\t', quoting=csv.QUOTE_NONE)
     def __iter__(self):
         return self
-    def next(self):
-        type, text, braille, _ = [unicode(s, "utf-8") for s in self.reader.next()]
+    def __next__(self):
+        type, text, braille, _ = next(self.reader)
         if type == "*":
             return {'text': text,
                     'braille': braille}
         else:
-            return self.next()
+            return next(self)
 
 def main():
     parser = argparse.ArgumentParser(description='Submit entries to dictionary.')
