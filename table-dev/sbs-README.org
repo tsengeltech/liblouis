@@ -30,7 +30,7 @@
   #+END_SRC
 - run the tool
   #+BEGIN_SRC sh
-    ./make suggestions
+    make suggestions
   #+END_SRC
 - analyze
   #+BEGIN_SRC sh
