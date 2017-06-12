@@ -57,3 +57,9 @@ lou_translate_SOURCES =	lou_translate.c
 lou_trace_SOURCES = lou_trace.c
 lou_compare_SOURCES = lou_compare.c
 lou_checkyaml_SOURCES =	lou_checkyaml.c
+
+SOURCE_FORMATTER := clang-format -i
+
+.PHONY : format-sources
+format-sources :
+	for file in $(SOURCES); do $(SOURCE_FORMATTER) $$file; done
