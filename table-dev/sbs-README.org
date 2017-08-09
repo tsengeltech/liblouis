@@ -34,7 +34,7 @@
   #+END_SRC
 - run the tool
   #+BEGIN_SRC sh
-    make suggestions
+    ../tools/lou_maketable --config=sbs.cfg
   #+END_SRC
 - analyze
   #+BEGIN_SRC sh
