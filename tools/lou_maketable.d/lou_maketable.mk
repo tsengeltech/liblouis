@@ -87,7 +87,7 @@ make-patterns.mk : $(CONFIG_FILE)
 			echo "" && \
 			echo "patterns.$$level.dic : %.dic : % patterns.$$prev_level.dic" && \
 			echo "	if [ -e pattmp.$$level ]; then \\" && \
-			echo "		perl substrings.pl \$$< tmp >substrings.log && \\" && \
+			echo "		perl $(MAKEFILE_DIR)substrings.pl \$$< tmp >substrings.log && \\" && \
 			echo "		rm substrings.log && \\" && \
 			echo "		echo \"UTF-8\\\n\\" && \
 			echo "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\\\n\\" && \
