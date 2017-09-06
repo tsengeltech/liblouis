@@ -36,15 +36,15 @@ extern "C" {
 typedef enum { noEncoding, bigEndian, littleEndian, ascii8 } EncodingType;
 
 typedef struct {
-    const char *fileName;
-    FILE *in;
-    int lineNumber;
-    EncodingType encoding;
-    int status;
-    int linelen;
-    int linepos;
-    int checkencoding[2];
-    widechar line[MAXSTRING];
+	const char *fileName;
+	FILE *in;
+	int lineNumber;
+	EncodingType encoding;
+	int status;
+	int linelen;
+	int linepos;
+	int checkencoding[2];
+	widechar line[MAXSTRING];
 } FileInfo;
 
 /**
