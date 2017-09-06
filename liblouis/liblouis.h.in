@@ -1,27 +1,28 @@
 /* liblouis Braille Translation and Back-Translation Library
 
-   Based on the Linux screenreader BRLTTY, copyright (C) 1999-2006 by The
-   BRLTTY Team
+Based on the Linux screenreader BRLTTY, copyright (C) 1999-2006 by The
+BRLTTY Team
 
-   Copyright (C) 2004, 2005, 2006 ViewPlus Technologies, Inc. www.viewplus.com
-   Copyright (C) 2004, 2005, 2006 JJB Software, Inc. www.jjb-software.com
-   Copyright (C) 2016 Mike Gray, American Printing House for the Blind
-   Copyright (C) 2016 Davy Kager, Dedicon
+Copyright (C) 2004, 2005, 2006 ViewPlus Technologies, Inc. www.viewplus.com
+Copyright (C) 2004, 2005, 2006 JJB Software, Inc. www.jjb-software.com
+Copyright (C) 2016 Mike Gray, American Printing House for the Blind
+Copyright (C) 2016 Davy Kager, Dedicon
 
-   This file is part of liblouis.
+This file is part of liblouis.
 
-   liblouis is free software: you can redistribute it and/or modify it
-   under the terms of the GNU Lesser General Public License as published
-   by the Free Software Foundation, either version 2.1 of the License, or
-   (at your option) any later version.
+liblouis is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as published
+by the Free Software Foundation, either version 2.1 of the License, or
+(at your option) any later version.
 
-   liblouis is distributed in the hope that it will be useful, but
-   WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-   Lesser General Public License for more details.
+liblouis is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+Lesser General Public License for more details.
 
-   You should have received a copy of the GNU Lesser General Public
-   License along with liblouis. If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU Lesser General Public
+License along with liblouis. If not, see <http://www.gnu.org/licenses/>.
+
 */
 
 /**
@@ -35,7 +36,10 @@
 extern "C" {
 #endif /* __cplusplus */
 
-typedef unsigned short int widechar;
+// clang-format interacts badly with @foo@
+// clang-format off
+typedef @WIDECHAR_TYPE@ widechar;
+// clang-format on
 typedef unsigned short formtype;
 
 #ifdef _MSC_VER
@@ -99,10 +103,9 @@ typedef enum {
 	comp8Dots = 8,
 	pass1Only = 16,
 	compbrlLeftCursor = 32,
-	otherTrans = 64,
-	ucBrl = 128,
-	noUndefinedDots = 256,
-	partialTrans = 512
+	ucBrl = 64,
+	noUndefinedDots = 128,
+	partialTrans = 256
 } translationModes;
 
 LIBLOUIS_API
@@ -312,8 +315,10 @@ lou_setLogLevel(logLevels level);
 /**
  * Parse, analyze and index tables.
  *
- * This function must be called prior to lou_findTable(). An error
- * message is given when a table contains invalid or duplicate
+ * This function must be called prior to lou_findTable() and
+ * lou_listTables(). Table names must be provided as a NULL-terminated
+ * array of strings. Each table should resolve to exactly one file. An
+ * error message is given when a table contains invalid or duplicate
  * metadata fields.
  */
 LIBLOUIS_API
@@ -323,12 +328,41 @@ lou_indexTables(const char **tables);
 /**
  * Find the best match for a query.
  *
- * Returns a string with the table name. Returns NULL when no match
- * can be found. An error message is given when the query is invalid.
+ * Returns the name of the table, or NULL when no match can be
+ * found. If lou_indexTables() has not been previously called, the
+ * table search path specified with LOUIS_TABLEPATH will be indexed
+ * first. An error message is given when the query is invalid. Freeing
+ * the memory of the returned string is the responsibility of the
+ * caller.
  */
 LIBLOUIS_API
 char *EXPORT_CALL
 lou_findTable(const char *query);
+
+/**
+ * Read metadata from a file.
+ *
+ * Returns the value of the metadata field specified by `key' in
+ * `table', or NULL when the field does not exist. Freeing the memory
+ * of the returned string is the responsibility of the caller.
+ */
+LIBLOUIS_API
+const char *EXPORT_CALL
+lou_getTableInfo(const char *table, const char *key);
+
+/**
+ * List available tables.
+ *
+ * Returns the names of available tables as a NULL-terminated array of
+ * strings. Only tables that are discoverable, i.e. the have active
+ * metadata, are listed. If lou_indexTables() has not been previously
+ * called, the table search path specified with LOUIS_TABLEPATH will
+ * be indexed first. Freeing the memory of the returned array and
+ * strings is the responsibility of the caller.
+ */
+LIBLOUIS_API
+const char **EXPORT_CALL
+lou_listTables();
 
 /* ====================== END OF BETA API ====================== */
 
